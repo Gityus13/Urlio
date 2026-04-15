@@ -34,7 +34,7 @@ brew install --cask urlio
 ```bash
 # Requirements: Node.js 18+ (https://nodejs.org)
 
-git clone https://github.com/YOUR_USERNAME/urlio.git
+git clone https://github.com/Gityus13/urlio.git
 cd urlio
 npm install
 npm start
