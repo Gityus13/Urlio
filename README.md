@@ -19,14 +19,14 @@
 ## 🚀 Install & Run (for everyone)
 
 ### Option 1 — Download the app (easiest)
-Go to [Releases](https://github.com/YOUR_USERNAME/urlio/releases) and download:
+Go to [Releases](https://github.com/Gityus13/urlio/releases) and download:
 - **Windows** → `URLio-Setup-x.x.x.exe` or `URLio-x.x.x-portable.exe`
 - **Mac** → `URLio-x.x.x-arm64.dmg` (Apple Silicon) or `URLio-x.x.x.dmg` (Intel)
 - **Linux** → `URLio-x.x.x.AppImage` or `URLio-x.x.x.deb`
 
 ### Option 2 — Homebrew (Mac)
 ```bash
-brew tap YOUR_USERNAME/urlio
+brew tap Gityus13/urlio
 brew install --cask urlio
 ```
 
@@ -34,7 +34,7 @@ brew install --cask urlio
 ```bash
 # Requirements: Node.js 18+ (https://nodejs.org)
 
-git clone https://github.com/Gityus13/urlio.git
+git clone https://github.com/Gityus13/Urlio.git
 cd urlio
 npm install
 npm start
@@ -85,7 +85,7 @@ After publishing a release:
 4. Put `Formula/urlio.rb` there
 5. Users can then install with:
    ```bash
-   brew tap YOUR_USERNAME/urlio
+   brew tap Gityus13/urlio
    brew install --cask urlio
    ```
 
@@ -127,4 +127,4 @@ urlio/
 
 ## 📄 License
 
-MIT © Your Name
+MIT © Yusif Gurbanzade (Gityus13)
