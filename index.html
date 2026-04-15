@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://is.gd https://*; img-src 'self' data:;" />
+  <title>URLio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Canvas for Three.js 3D background ── -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ── Floating orbs (CSS) ── -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ── Custom title bar ── -->
+  <div id="titlebar">
+    <div class="titlebar-drag">
+      <span class="app-title-bar">URLio</span>
+    </div>
+    <div class="titlebar-controls">
+      <button class="tb-btn tb-min" id="tb-min" title="Minimize">&#8722;</button>
+      <button class="tb-btn tb-max" id="tb-max" title="Maximize">&#9633;</button>
+      <button class="tb-btn tb-close" id="tb-close" title="Close">&#215;</button>
+    </div>
+  </div>
+
+  <!-- ── App Shell ── -->
+  <div id="app">
+
+    <!-- HEADER -->
+    <header id="header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M13 20l-4 4a5 5 0 010-7.07l4-4" stroke="url(#g1)" stroke-width="2.5" stroke-linecap="round"/><path d="M19 12l4-4a5 5 0 010 7.07l-4 4" stroke="url(#g2)" stroke-width="2.5" stroke-linecap="round"/><path d="M19 13l-6 6" stroke="url(#g3)" stroke-width="2.5" stroke-linecap="round"/><defs><linearGradient id="g1" x1="9" y1="13" x2="13" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#7c3aed"/></linearGradient><linearGradient id="g2" x1="19" y1="12" x2="23" y2="19" gradientUnits="userSpaceOnUse"><stop stop-color="#f472b6"/><stop offset="1" stop-color="#a78bfa"/></linearGradient><linearGradient id="g3" x1="13" y1="13" x2="19" y2="19" gradientUnits="userSpaceOnUse"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs></svg>
+        </div>
+        <span class="logo-text">URL<span class="logo-accent">io</span></span>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-btn" id="open-history-btn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 6v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          History
+          <span class="history-badge" id="history-badge">0</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="hero-eyebrow">✦ Free · No Sign-up · Instant</div>
+      <h1 class="hero-title">
+        Shorten <span class="gradient-text">URLs.</span><br />
+        Reveal <span class="gradient-text-2">Secrets.</span>
+      </h1>
+      <p class="hero-subtitle">
+        Transform long links into short ones, or expose what's really hiding<br />
+        behind any short URL — all in one beautiful app.
+      </p>
+    </section>
+
+    <!-- MAIN CARD -->
+    <main id="main-card">
+
+      <!-- Tab Switcher -->
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="shorten" role="tab">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M8 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Shorten URL
+        </button>
+        <button class="tab" data-tab="expand" role="tab">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8H3M8 3L3 8l5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Expand URL
+        </button>
+        <div class="tab-indicator"></div>
+      </div>
+
+      <!-- Shorten Panel -->
+      <div class="panel" id="panel-shorten">
+        <div class="input-wrapper" id="shorten-input-wrapper">
+          <svg class="input-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101" stroke-linecap="round"/><path d="M6.172 9.828a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.102-1.101" stroke-linecap="round"/></svg>
+          <input
+            type="url"
+            id="shorten-input"
+            placeholder="Paste your long URL here…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="clear-btn" id="shorten-clear" title="Clear">&#215;</button>
+        </div>
+        <button class="action-btn" id="shorten-btn">
+          <span class="btn-text">Shorten It</span>
+          <div class="btn-loader" style="display:none"></div>
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+
+        <!-- Result -->
+        <div class="result-card" id="shorten-result">
+          <div class="result-label">Your short URL</div>
+          <div class="result-url-row">
+            <a class="result-url" id="shorten-result-url" target="_blank" rel="noopener"></a>
+          </div>
+          <div class="result-actions">
+            <button class="result-btn copy-btn" id="shorten-copy">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="9" height="9" rx="2" stroke-linecap="round"/><path d="M5 12H4a2 2 0 01-2-2V4a2 2 0 012-2h6a2 2 0 012 2v1" stroke-linecap="round"/></svg>
+              Copy
+            </button>
+            <button class="result-btn qr-btn" id="shorten-qr">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="3" y="12" width="5" height="5" rx="1"/><path d="M12 12h1v1h-1zM14 12h1M12 14h3M14 16h1v1h-1zM12 16h1" stroke-linecap="round"/></svg>
+              QR Code
+            </button>
+            <button class="result-btn open-btn" id="shorten-open">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 6H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-4M14 4h4m0 0v4m0-4L10 10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Open
+            </button>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="error-card" id="shorten-error"></div>
+      </div>
+
+      <!-- Expand Panel -->
+      <div class="panel hidden" id="panel-expand">
+        <div class="input-wrapper" id="expand-input-wrapper">
+          <svg class="input-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 9l-3 3m0 0l3 3m-3-3h12M3 9l3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input
+            type="url"
+            id="expand-input"
+            placeholder="Paste a short URL to reveal it…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="clear-btn" id="expand-clear" title="Clear">&#215;</button>
+        </div>
+        <button class="action-btn action-btn-expand" id="expand-btn">
+          <span class="btn-text">Reveal It</span>
+          <div class="btn-loader" style="display:none"></div>
+          <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
+        </button>
+
+        <!-- Result -->
+        <div class="result-card" id="expand-result">
+          <div class="result-label">Full URL revealed</div>
+          <div class="result-url-row">
+            <a class="result-url" id="expand-result-url" target="_blank" rel="noopener"></a>
+          </div>
+          <div class="result-actions">
+            <button class="result-btn copy-btn" id="expand-copy">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="9" height="9" rx="2"/><path d="M5 12H4a2 2 0 01-2-2V4a2 2 0 012-2h6a2 2 0 012 2v1" stroke-linecap="round"/></svg>
+              Copy
+            </button>
+            <button class="result-btn open-btn" id="expand-open">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 6H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-4M14 4h4m0 0v4m0-4L10 10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Open
+            </button>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="error-card" id="expand-error"></div>
+      </div>
+
+    </main>
+
+    <!-- STATS BAR -->
+    <div id="stats-bar">
+      <div class="stat">
+        <span class="stat-value" id="stat-shortened">0</span>
+        <span class="stat-label">Shortened</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-value" id="stat-expanded">0</span>
+        <span class="stat-label">Expanded</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-value" id="stat-total">0</span>
+        <span class="stat-label">Total</span>
+      </div>
+    </div>
+
+  </div><!-- /#app -->
+
+  <!-- ── History Sidebar ── -->
+  <aside id="history-sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">History</h2>
+      <div class="sidebar-actions">
+        <button class="sidebar-clear-btn" id="clear-history-btn">Clear all</button>
+        <button class="sidebar-close-btn" id="close-history-btn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l8 8M14 6l-8 8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar-body" id="history-list">
+      <div class="history-empty">
+        <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="1.5"/><path d="M24 16v8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <p>No history yet.<br/>Start shortening or expanding!</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── History Overlay ── -->
+  <div id="sidebar-overlay"></div>
+
+  <!-- ── QR Code Modal ── -->
+  <div id="qr-modal">
+    <div class="qr-modal-card">
+      <button class="qr-close-btn" id="qr-close-btn">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l8 8M14 6l-8 8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="qr-title">QR Code</div>
+      <div class="qr-subtitle" id="qr-url-label"></div>
+      <div id="qr-code-container"></div>
+      <div class="qr-actions">
+        <button class="result-btn copy-btn" id="qr-copy-url">Copy URL</button>
+        <button class="result-btn qr-btn" id="qr-download">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast notification ── -->
+  <div id="toast"></div>
+
+  <!-- ── Scripts ── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
